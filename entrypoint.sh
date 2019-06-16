@@ -113,3 +113,11 @@ HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -o /dev/null \
   "https://mods.factorio.com/mod/${PACKAGE_NAME}/downloads/edit")
+HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+
+if [ $HTTP_STATUS -eq 200 ]; then
+  echo "Release upload completed"
+else
+  echo "Failed to upload release"
+  exit 1
+fi
