@@ -1,6 +1,11 @@
 #!/bin/sh
 
-TAG=$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$")
+if [ "${GITHUB_REF}" == "${GITHUB_REF#refs/tags/}" ]; then
+  echo "This is not a tagged push." 1>&2
+  exit 78
+fi
+
+TAG="${GITHUB_REF#refs/tags/}"
 
 if ! echo "${TAG}" | grep -qE '^\d+\.\d+\.\d+$'; then
   echo "Bad version in tag, needs to be %u.%u.%u" 1>&2
