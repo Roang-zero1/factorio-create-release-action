@@ -3,8 +3,8 @@
 TAG=$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$")
 
 if ! echo "${TAG}" | grep -qE '^\d+\.\d+\.\d+$'; then
-    echo "Bad version in tag, needs to be %u.%u.%u" 1>&2
-    exit 1
+  echo "Bad version in tag, needs to be %u.%u.%u" 1>&2
+  exit 1
 fi
 
 export PACKAGE_NAME=$(jq -r .name info.json)
@@ -12,9 +12,9 @@ export PACKAGE_VERSION=$(jq -r .version info.json)
 export PACKAGE_FULL_NAME=$PACKAGE_NAME\_$PACKAGE_VERSION
 export PACKAGE_FILE="$PACKAGE_FULL_NAME.zip"
 
-if ! [[ "${PACKAGE_VERSION}" == "${TAG}" ]]; then
-    echo "Tag version (${TAG}) doesn't match info.json version (${PACKAGE_VERSION}) (or info.json is invalid)." 1>&2
-    exit 1
+if ! [[ ${PACKAGE_VERSION} == "${TAG}" ]]; then
+  echo "Tag version (${TAG}) doesn't match info.json version (${PACKAGE_VERSION}) (or info.json is invalid)." 1>&2
+  exit 1
 fi
 
 if ! grep -q "\"$PACKAGE_VERSION\"" changelog.json; then
@@ -43,15 +43,15 @@ curl -b cookiejar.txt -c cookiejar.txt -s "https://mods.factorio.com/api/mods/${
 # store the return code before running anything else
 STATUS_CODE=$?
 if [[ $STATUS_CODE -ne 4 ]]; then
-    echo "Release already exists, skipping"
-    exit 78
+  echo "Release already exists, skipping"
+  exit 78
 fi
 echo "Release doesn't exist for ${PACKAGE_VERSION}, uploading"
 # Load the upload form, getting an upload token
 UPLOAD_TOKEN=$(curl -b cookiejar.txt -c cookiejar.txt -s "https://mods.factorio.com/mod/${PACKAGE_NAME}/downloads/edit" | grep token | sed -r -e "s/.*token: '(.*)'.*/\1/")
-if [[ -z "${UPLOAD_TOKEN}" ]]; then
-    echo "Couldn't get an upload token, failed"
-    exit 1
+if [[ -z ${UPLOAD_TOKEN} ]]; then
+  echo "Couldn't get an upload token, failed"
+  exit 1
 fi
 # Upload the file, getting back a response with details to send in the final form submission to complete the upload
 UPLOAD_RESULT=$(curl -b cookiejar.txt -c cookiejar.txt -s -F "file=@${FILE_PATH};type=application/x-zip-compressed" "https://direct.mods-data.factorio.com/upload/mod/${UPLOAD_TOKEN}")
@@ -60,9 +60,9 @@ CHANGELOG=$(echo "${UPLOAD_RESULT}" | jq -r '@uri "\(.changelog)"')
 INFO=$(echo "${UPLOAD_RESULT}" | jq -r '@uri "\(.info)"')
 FILENAME=$(echo "${UPLOAD_RESULT}" | jq -r '.filename')
 THUMBNAIL=$(echo "${UPLOAD_RESULT}" | jq -r '.thumbnail // empty')
-if [[ "${FILENAME}" == "null" ]] || [[ -z "${FILENAME}" ]]; then
-    echo "Upload failed"
-    exit 1
+if [[ ${FILENAME} == "null" ]] || [[ -z ${FILENAME} ]]; then
+  echo "Upload failed"
+  exit 1
 fi
 echo "Uploaded ${PACKAGE_NAME}_${PACKAGE_VERSION}.zip to ${FILENAME}, submitting as new version"
 # Post the form, completing the release
