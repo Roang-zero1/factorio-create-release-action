@@ -7,7 +7,7 @@ fi
 
 TAG="${GITHUB_REF#refs/tags/}"
 
-if ! echo "${TAG}" | grep -qE '^\d+\.\d+\.\d+$'; then
+if ! echo "${TAG}" | grep -qE '^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$'; then
   echo "Bad version in tag, needs to be %u.%u.%u" 1>&2
   exit 1
 fi
