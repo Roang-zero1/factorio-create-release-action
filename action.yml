@@ -1,0 +1,9 @@
+name: "GitHub Action for Factorio Mod Release"
+description: "Upload a Factorio mod to the mod portal."
+author: "Roang_zero1 <lucas@brandstaetter.tech>"
+branding:
+  icon: "upload"
+  color: "orange"
+runs:
+  using: "docker"
+  image: "Dockerfile"

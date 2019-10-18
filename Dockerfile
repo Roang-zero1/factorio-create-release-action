@@ -1,9 +1,4 @@
-FROM roangzero1/factorio-mod:luarocks5.3-alpine as base
-
-LABEL "com.github.actions.name"="GitHub Action for Factorio Mod Release"
-LABEL "com.github.actions.description"="Uploada Factorio mod to the mod portal."
-LABEL "com.github.actions.icon"="upload"
-LABEL "com.github.actions.color"="orange"
+FROM docker.pkg.github.com/roang-zero1/factorio-mod-actions/factorio-mod:luarocks5.3-alpine
 
 LABEL "repository"="https://github.com/Roang-zero1/factorio-create-release-action"
 LABEL "homepage"="https://github.com/Roang-zero1/factorio-create-release-action"
