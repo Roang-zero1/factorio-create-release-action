@@ -1,5 +1,13 @@
 #!/bin/sh
 
+# Backwards compatibility mapping
+if [ -z $FACTORIO_USER ]; then :; else
+  INPUT_FACTORIO_USER=$FACTORIO_USER
+fi
+if [ -z $FACTORIO_PASSWORD ]; then :; else
+  INPUT_FACTORIO_PASSWORD=$FACTORIO_PASSWORD
+fi
+
 if [ "${GITHUB_REF}" == "${GITHUB_REF#refs/tags/}" ]; then
   echo "This is not a tagged push." 1>&2
   exit 78
@@ -47,8 +55,8 @@ curl -sSL \
   -b cookiejar.txt \
   -c cookiejar.txt \
   -F "csrf_token=${CSRF}" \
-  -F "username=${FACTORIO_USER}" \
-  -F "password=${FACTORIO_PASSWORD}" \
+  -F "username=${INPUT_FACTORIO_USER}" \
+  -F "password=${INPUT_FACTORIO_PASSWORD}" \
   -o /dev/null \
   https://mods.factorio.com/login
 

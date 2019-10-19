@@ -4,6 +4,13 @@ author: "Roang_zero1 <lucas@brandstaetter.tech>"
 branding:
   icon: "upload"
   color: "orange"
+inputs:
+  factorio_user:
+    description: "User that will be used to authenticate to the Factorio mod-portal."
+    required: true
+  factorio_password:
+    description: "Password that will be used to authenticate to the Factorio mod-portal."
+    required: true
 runs:
   using: "docker"
   image: "Dockerfile"
