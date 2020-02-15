@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.1.2
+
+Improve error messages
+
 ## v1.1.1
 
 Update Dockerfile to be based on alpine
