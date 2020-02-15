@@ -26,12 +26,13 @@ export PACKAGE_FULL_NAME=$PACKAGE_NAME\_$PACKAGE_VERSION
 export PACKAGE_FILE="$PACKAGE_FULL_NAME.zip"
 
 if ! [[ ${PACKAGE_VERSION} == "${TAG}" ]]; then
-  echo "Tag version (${TAG}) doesn't match info.json version (${PACKAGE_VERSION}) (or info.json is invalid)." 1>&2
+  echo "ERROR: Tag version (${TAG}) doesn't match info.json version (${PACKAGE_VERSION}) (or info.json is invalid)." 1>&2
   exit 1
 fi
 
 if ! grep -q "$PACKAGE_VERSION" changelog.txt; then
-  echo "ERROR: Changelog was not compiled." 1>&2
+  echo "ERROR: Current version (${PACKAGE_VERSION}) not found in 'changelog.txt'. Please add ingame changelog for current version." 1>&2
+  echo "See https://forums.factorio.com/viewtopic.php?f=25&t=67140 for mor information." 1>&2
   exit 1
 fi
 
@@ -83,7 +84,7 @@ UPLOAD_TOKEN=$(curl -sSL \
   sed -r -e "s/.*token: '(.*)'.*/\1/")
 
 if [[ -z ${UPLOAD_TOKEN} ]]; then
-  echo "Couldn't get an upload token, failed"
+  echo "ERROR: Couldn't get an upload token, failed" 1>&2
   exit 1
 fi
 
@@ -101,7 +102,7 @@ FILENAME=$(echo "${UPLOAD_RESULT}" | jq -r '.filename')
 THUMBNAIL=$(echo "${UPLOAD_RESULT}" | jq -r '.thumbnail // empty')
 
 if [[ ${FILENAME} == "null" ]] || [[ -z ${FILENAME} ]]; then
-  echo "Upload failed"
+  echo "ERROR: Upload failed" 1>&2
   exit 1
 fi
 
@@ -121,6 +122,6 @@ HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Release upload completed"
 else
-  echo "Failed to upload release"
+  echo "ERROR: Failed to upload release" 1>&2
   exit 1
 fi
